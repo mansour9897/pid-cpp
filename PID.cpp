@@ -1,14 +1,9 @@
 #include "PID.h"
+#include "pico/stdlib.h"
 
 PID::PID(float kp, float ki, float kd)
+    : PID::PID(kp, ki, kd, 0, 100)
 {
-    _kd = kd;
-    _ki = ki;
-    _kp = kp;
-    _minOut = 0;
-    _maxOut = 100;
-    outputSum = 0;
-    lastInput = 0;
 }
 
 PID::PID(float kp, float ki, float kd, float minout, float maxout)
@@ -20,6 +15,7 @@ PID::PID(float kp, float ki, float kd, float minout, float maxout)
     _maxOut = maxout;
     outputSum = 0;
     lastInput = 0;
+    sampleTime = 100;
 }
 
 void PID::setOutputRange(float min, float max)
@@ -30,7 +26,10 @@ void PID::setOutputRange(float min, float max)
 
 float PID::compute(float input)
 {
-    float output = 0;
+    if (to_ms_since_boot(get_absolute_time()) - lastTime < sampleTime)
+        return output;
+
+    lastTime = to_ms_since_boot(get_absolute_time());
     float err = setpoint - input;
     float dInput = (input - lastInput);
 
@@ -50,3 +49,10 @@ float PID::compute(float input)
 
     return output;
 }
+
+void PID::setSampleTime(unsigned long t)
+{
+    sampleTime = t;
+}
+
+PID::~PID() {}

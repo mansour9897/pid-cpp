@@ -11,6 +11,9 @@ private:
     float _maxOut;
     float lastInput;
     float outputSum;
+    float output;
+    unsigned long sampleTime; // ms
+    unsigned long lastTime;   // ms
 
 public:
     float setpoint;
@@ -20,6 +23,7 @@ public:
     /**********************************************************************/
     void setOutputRange(float min, float max);
     float compute(float input);
+    void setSampleTime(unsigned long t);
 };
 
 #endif // !_PID_H_
