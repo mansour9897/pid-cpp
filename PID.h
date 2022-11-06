@@ -24,6 +24,7 @@ public:
     void setOutputRange(float min, float max);
     float compute(float input);
     void setSampleTime(unsigned long t);
+    void clear();
 };
 
 #endif // !_PID_H_

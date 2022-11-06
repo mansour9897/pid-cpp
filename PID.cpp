@@ -1,6 +1,6 @@
 #include "PID.h"
 #include "pico/stdlib.h"
-
+#include <stdio.h>
 PID::PID(float kp, float ki, float kd)
     : PID::PID(kp, ki, kd, 0, 100)
 {
@@ -47,9 +47,16 @@ float PID::compute(float input)
     if (output < _minOut)
         output = _minOut;
 
+    printf("set: %f\tin: %f\terr: %f\tout: %f\r", setpoint, input, err, output);
     return output;
 }
 
+void PID::clear()
+{
+    output=0;
+    lastInput=0;
+    outputSum=0;
+}
 void PID::setSampleTime(unsigned long t)
 {
     sampleTime = t;
